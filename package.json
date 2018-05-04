@@ -1,0 +1,17 @@
+{
+  "name": "huje",
+  "version": "1.0.0",
+  "description": "This is a Huje server",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Pradeep Kumar",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "dotenv": "^5.0.1",
+    "express": "^4.16.3",
+    "mongoose": "^5.0.17"
+  }
+}
