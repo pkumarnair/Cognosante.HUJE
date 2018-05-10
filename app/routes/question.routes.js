@@ -11,7 +11,7 @@ module.exports = (app) => {
 	app.post('/question', questions.findOneUnanswered);
 
 	//update a question wit question id
-	app.put('/questions/:questionId', questions.update);
+	app.put('/questions/:questionId', questions.update, questions.findOneUnanswered);
 
 	//Delete a question with question id
 	app.delete('/questions/:questionId', questions.delete);

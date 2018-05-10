@@ -8,11 +8,11 @@ module.exports = (app) => {
 	app.get('/judges', judges.findAll);
 
 	//retrive a single judge with judge id
-	app.get('/judges/:judgeid', judges.findOne);
+	app.get('/judges/:judgeId', judges.findOne);
 
 	//update a judge wit judge id
-	app.put('/judges/:judgeid', judges.update);
+	app.put('/judges/:judgeId', judges.update);
 
 	//Delete a judge with judge id
-	app.delete('/judges/:judgeid', judges.delete);
+	app.delete('/judges/:judgeId', judges.delete);
 }

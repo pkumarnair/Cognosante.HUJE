@@ -1,5 +1,3 @@
-console.log('Now the value for FOO is:', process.env.FOO);
-
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -11,6 +9,13 @@ app.use(bodyParser.urlencoded({extended: true}))
 
 //parse request of content-type - application/json
 app.use(bodyParser.json())
+
+app.all("/*", function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With, judge, category");
+  res.header("Access-Control-Allow-Methods", "GET, PUT, POST");
+  return next();
+});
 
 //configuring the database
 const dbConfig = require('./config/database.config.js');
@@ -37,6 +42,6 @@ require('./app/routes/judge.routes.js')(app);
 require('./app/routes/question.routes.js')(app);
 
 // listen for requests
-app.listen(process.env.PORT || 3000, () => {
+app.listen(process.env.PORT || 3030, () => {
 	console.log("server is listening on port 3030");
 })

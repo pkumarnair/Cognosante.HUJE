@@ -1,7 +1,8 @@
 const Question = require("../models/question.model.js");
 
 //create and save a new question
-exports.create = (req, res) => {
+
+exports.create = (req, res, next) => {
 	// Validate request
 	if(!req.body){
 		return res.status(400).send({
@@ -59,54 +60,62 @@ exports.findOne = (req, res) => {
 
 exports.findOneUnanswered = (req, res) => {
 	// Validate request
-	if(!req.body){
+	debugger
+	if(!req.headers.judge){
 		return res.status(400).send({
 			message: "Question request must pass a judge id"
 		});
 	}
 
-	console.log(req.body.judgeId)
-//	Question.find({'judgments.judge': {"$ne" : req.body.judgeId}})
-	Question.findOne({'judgments.judge':{$ne: 'req.body.judgeId'}} )
+	console.log(req.headers.judge)
+//	Question.find({'judgments.judge': {"$ne" : req.headers.judge}})
+	Question.findOne(
+		{$and: [{'judgments.judge': {$ne: req.headers.judge}},
+				{'category': {$eq: req.headers.category}}]})
 		.then(question => {
+			debugger	
 			if(!question){
 				return res.status(400).send({
-					message: "Question not found with judge id " + req.body.judgeId
+					message: "Question not found for judge " + req.headers.judge
 				});
 			}
 			res.send(question);
 		}).catch(err => {
 			if(err.kind === "ObjectId"){
 				res.status(404).send({
-					message: "Question not found with judge id " + req.body.judgeId
+					message: "Question not found for judge " + req.headers.judge
 				});
 			}
 			res.status(500).send({
-				message: "Error retrieving question with judge id " + req.body.judgeId
+				message: "Error retrieving question for judge " + req.headers.judge
 			});
 		});
 };
 
 
 //update a Question by Question Id
-exports.update = (req, res) => {
+exports.update = (req, res, next) => {
 	//validate request
-	if(!req.body){
-		return res.status(400).send({
-			message: "question information to be updated is missing."
-		});
+	debugger
+	if(req.params.questionId === "0"){
+		return next()
+	}
+
+	judgment={
+		judgment: req.body.judgment,
+		judge:req.headers.judge
 	}
 
 	//find question and update it by ID
 	Question.findByIdAndUpdate(req.params.questionId,
-		{ $push: { judgments: req.body }}, {new: true})
+		{ $push: { judgments: judgment }}, {new: true})
 		.then(question => {
 			if(!question){
 				return res.status(400).send({
 					message: "question not found with id " + req.params.questionId
 				});
 			}
-			res.send(question);
+			next();
 		}).catch(err => {
 			if (err.kind === 'ObjectId'){
 				return res.status(404).send({

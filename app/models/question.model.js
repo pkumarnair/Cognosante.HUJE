@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Base = require("./base.model.js");
 
 const QuestionSchema = mongoose.Schema({
 	questions: [{
@@ -7,6 +8,8 @@ const QuestionSchema = mongoose.Schema({
 		searchfor: String,
 		qvalue: String
 	}],
+	category:String,
+	task:String,
 	joptions: {
 		jtype:String,
 		jvalues:[{
@@ -19,10 +22,9 @@ const QuestionSchema = mongoose.Schema({
 			judgment:String,
 			insertts:{type : Date, default: Date.now}
 		}]
-}, {
-	timestamps: true
 });
 
 // the timestamps option above adds two fields createdAt and updatedAt to the schema 
 
-module.exports = mongoose.model('Question', QuestionSchema);
+//module.exports = mongoose.model('Question', QuestionSchema);
+module.exports = Base.discriminator('Question', QuestionSchema);
